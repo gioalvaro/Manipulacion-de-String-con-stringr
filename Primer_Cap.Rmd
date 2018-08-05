@@ -1,0 +1,283 @@
+---
+title: "Primer Capitulo de Manipulacion de Cadenas con stringr"
+author: "Alvaro Luis Fraga"
+date: "August 05, 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## Primer Ejercicio
+
+Tanto las comillas dobles (") como las simples (') funcionan, pero existen algunas pautas para su uso.
+
+En primer lugar, debe preferir las comillas dobles (") a las comillas simples ('). Esto significa que, siempre que estés definiendo una cadena, tu primera intuición debería ser usar ".
+
+Desafortunadamente si su cadena tiene " dentro de ella, R interpretará la cita doble como " este es el final de la cadena ", no como " este es el carácter "". 
+Por último, hay casos en los que se necesita tanto " como ' dentro de la cadena. En este caso, vuelva a la primera pauta y utilice " para definir la cadena, pero deberas diferenciar de las comillas dobles dentro de la cadena utilizando una barra invertida (es decir, \").
+
+```{r}
+# Linea 1
+linea1 <- "The table was a large one, but the three were all crowded together at one corner of it:"
+
+# Linea 2
+linea2 <- "\"No room! No room!\" they cried out when they saw Alice coming."
+
+# Linea 3
+linea3 <- "\"There's plenty of room!\" said Alice indignantly, and she sat down in a large arm-chair at one end of the table."
+```
+
+## Segundo Ejercicio
+
+A pesar de que usaste comillas simples para no tener que escapar (\) de las comillas dobles, cuando R lo imprime, verás comillas dobles escapadas (\")! A R no le importa cómo definiste la cadena, sólo sabe lo que la cadena representa, en este caso, una cadena con comillas dobles dentro.
+
+Cuando le preguntas a R por la línea 2, en realidad está llamando a print(línea 2) y el método print() para cadenas muestra las cadenas tal y como las ingresas. Si quieres ver la cadena que representa necesitarás usar una función diferente: writeLines().
+```{r}
+linea2
+```
+Una funcion interesante es writeLines(). A esta le puedes pasar un vector de cadeas e imprimira en pantalla por defecto estas cadenas separadas una por linea. 
+
+No olvides que puedes comprobar los argumentos que admite y la documentacion de la funcion.
+```{r}
+# Documentacion
+?writeLines
+# Imprimir argumentos y valores por defecto
+args(writeLines)
+
+```
+
+```{r}
+# Poner todas las lineas en un vector
+lineas <- c(linea1, linea2, linea3)
+
+# Imprimir Lineas
+print(lineas)
+
+# Usar writeLines() sobre lineas
+writeLines(lineas)
+
+# Escribir las lineas con un separador entre ellas
+writeLines(lineas, sep = ' ')
+
+# Usar writeLines() con la siguiente cadena "hola\n\U1F30D", imprime Hola Mundo
+writeLines("hola\n\U1F30D")
+
+```
+
+### Tercer Ejercicio: Secuencias de escape
+
+Una secuencia en una cadena que comienza con un $\$ se llama secuencia de escape y nos permite incluir caracteres especiales en nuestras cadenas. Se vio una secuencia de escape en el primer ejercicio: \" se usa para denotar una doble cita.
+
+En "hola\n\U1F30D" hay dos secuencias de escape: y U seguido de una secuencia de hasta 8 dígitos hexadecimales denota un carácter Unicode en particular.
+
+Unicode es un estándar para representar caracteres que pueden no estar en el teclado. Cada carácter disponible tiene un punto de código Unicode: un número que lo identifica de forma única. Estos puntos de código se escriben generalmente en notación hexadecimal, es decir, usando la base 16 y los dígitos 0-9 y A-F. Puede encontrar el punto de código para un carácter en particular buscando en un gráfico de códigos. Si sólo necesita cuatro dígitos para el punto de código, una secuencia de escape alternativa es \u.
+[Tabla Unicode](https://unicode-table.com/es/)
+Cuando R se encuentra con una, asume que estás comenzando un escape, así que si realmente necesitas una barra invertida en tu cadena necesitarás la secuencia.
+
+```{r}
+# Deberia imprimir: Para tener \ Tu necesitas \\
+writeLines("Para tener \\ Tu necesitas \\\\")
+
+# Deberia Imprimir: 
+# Esto es realmente 
+# realmente realmente
+# una cadena larga
+writeLines("Esto es realmente\nrealmente realmente\nuna cadena larga")
+
+# Usa writeLines con \u0928\u092e\u0938\u094d\u0924\u0947 \u0926\u0941\u0928\u093f\u092f\u093e
+writeLines("\u0928\u092e\u0938\u094d\u0924\u0947 \u0926\u0941\u0928\u093f\u092f\u093e")
+
+```
+
+### Cuarto Ejercicio: Usando format() con números
+
+El comportamiento de la funcion format() puede ser bastante confuso.
+
+El argumento scientific de format() controla si los números se muestran en formato fijo (scientific = F) o científico (scientific = T).
+
+Cuando la representación es científica, el argumento digits es el número de dígitos antes del exponente. Cuando la representación es fija, digits controla los dígitos significativos utilizados para el número más pequeño (en magnitud). Cada número será formateado para que coincida con el número de decimales en el número más pequeño. Esto significa que el número de decimales que obtiene en su salida depende de todos los valores que está formateando!
+
+Por ejemplo, si el número más pequeño es 0.0011, y digits = 1, entonces 0.0011 requiere 3 lugares después del decimal para representarlo a 1 dígito significativo, 0.001. Cada dos números se formatearán a 3 lugares después del punto decimal.
+
+Entonces, ¿cuántos decimales obtendrás si 1.0011 es el número más pequeño? Lo descubrirás en este ejercicio.
+
+```{r}
+# Algunos vectores de numeros
+cambio.porcentaje  <- c(4, -1.91, 3.00, -5.002)
+entrada <-  c(72.19, 1030.18, 10291.93, 1189192.18)
+p.valores <- c(0.12, 0.98, 0.0000191, 0.00000000002)
+
+# Formate c(0.0011, 0.011, 1) con digits = 1
+format(c(0.0011,0.011,1),digits = 1)
+
+# Formate c(1.0011, 2.011, 1) con digits = 1
+format(c(1.0011,2.011,1),digits= 1)
+
+# Formate cambio.porcentaje para que tenga solo un lugar despues del punto decimal
+format(cambio.porcentaje, digits = 2)
+
+# Formate para que solo aparezcan numero entero
+format(entrada, digits = 2)
+
+# Formate p_values in fixed format
+format(p.valores, scientific = FALSE)
+```
+
+### Quinto Ejercicio: Controlar otros aspectos de la cadena
+format() no sólo controla la forma en que se representa el número, sino que también controla algunas de las propiedades de la cadena resultante que afectan a su visualización.
+
+Por ejemplo, por defecto format() rellenará el inicio de las cadenas con espacios para que los puntos decimales se alineen, lo que es realmente útil si está presentando los números en una columna vertical. Sin embargo, si está poniendo el número en el medio de una oración, es posible que no desee estos espacios adicionales. Puede configurar trim = TRUE para eliminarlos.
+
+Cuando los números son largos, puede ser útil "embellecerlos", por ejemplo, en lugar de 1000000000 mostrar 1.000.000.000.000. En este caso se añade una coma (,) cada 3 dígitos. Esto puede ser controlado por los argumentos big.interval y big.mark, por ejemplo format(1000000000, big.mark = ",", big.interval = 3, scientific = FALSE). Estos argumentos son realmente pasados a prettyNum() así que diríjase allí para más detalles.
+
+```{r}
+entrada.formateada <- format(entrada, digits = 2)
+
+# Imprimir entrada.formateada
+print(entrada.formateada)
+
+# Llamar writeLines() sobre la variable entrada.formateada
+writeLines(entrada.formateada)
+
+# Define entrada.achicada
+entrada.achicada <- format(entrada, digits = 2, trim = TRUE)
+
+# Llamar writeLines() sobre entrada.achicada
+writeLines(entrada.achicada)
+
+# Define entrada.embellezida
+entrada.embellezida <- format(entrada, digits = 2, big.mark = ",")
+
+# Llamar writeLines() sobre entrada.embellezida
+writeLines(entrada.embellezida)
+```
+
+Sexto ejercicio: formatC()
+La función formatC() proporciona una forma alternativa de formatear números basada en la sintaxis de estilo C.
+
+En vez del argumento scientific, formatC() tiene un argumento de formato que toma un código que representa el formato requerido. Los más útiles son:
+
+- "f" de fijo,
+- "e" para científico, y
+- "g" para fijo a menos que la ciencia ahorre espacio
+
+Cuando se utiliza el formato científico, el argumento digits se comporta como lo hace en format(); especifica el número de dígitos significativos. Sin embargo, a diferencia de format(), cuando se utiliza formato fijo, los dígitos son el número de dígitos después del punto decimal. Esto es más predecible que format(), porque el número de lugares después del decimal es fijo independientemente de los valores que se formateen.
+
+formatC() también formatea números individualmente, lo que significa que siempre obtiene la misma salida independientemente de otros números en el vector.
+
+El argumento flag le permite proporcionar algunos modificadores que, por ejemplo, fuerzan la visualización del signo (flag = "+"), números de alineación a la izquierda (flag = "-") y números de pad con ceros a la izquierda (flag = "0"). Verá un ejemplo en este ejercicio.
+
+```{r}
+
+x <- c(0.0011, 0.011, 1)
+y <- c(1.0011, 2.011, 1)
+
+# formatC() sobre x con format = "f", digits = 1
+formatC(x, format = "f", digits = 1)
+
+# formatC() sobre y con format = "f", digits = 1
+formatC(y, format = "f", digits = 1)
+
+# Formate cambio.porcentaje a un lugar despues del punto decimal
+formatC(cambio.porcentaje, format = "f", digits = 1)
+
+# cambio.porcentaje con flag = "+"
+formatC(cambio.porcentaje, format = "f", digits = 1, flag = "+")
+
+# Formate p_values usando format = "g" y digits = 2
+formatC(p.valores , format = "g", digits = 2)
+
+```
+
+### Septimo Ejercicio: Anotación de números
+Para manejar el uso de paste(), usted va a anotar algunas de sus cadenas de números formateadas.
+
+Los puntos clave a recordar son:
+
+Los vectores que pasas a pegar() son pegados elemento por elemento, usando el argumento sep para combinarlos.
+Si los vectores pasados a paste() no tienen la misma longitud, los vectores más cortos son reciclados hasta la longitud del más largo.
+Utilice $collapse$ solo si se desea que un único string sea la salida. $collapse$ especifica el string a colocar entre diferentes elementos.
+
+```{r}
+# Agrega $ a entrada.embellezida
+paste('$', entrada.embellezida, sep = "" )
+ 
+# Agrega % a entrada.embellezida
+paste(entrada.embellezida,'%', sep = "" )
+
+# Crea un vector con elementos como 2010: +4.0%`
+year_percent <- paste(years, ": ", entrada.embellezida,"%",sep = '')
+
+# Colapsa, Junta Todos los anios en una sola cadena (no tengo enie)
+paste(year_percent, collapse = ", ")
+```
+
+### Octavo Ejercicio: Una tabla muy simple
+Combinar format() y paste() es una forma de mostrar tablas muy simples. Recuerde, ya que format() mira todos los valores en un vector antes de formatear, usa un formato consistente y, por defecto, se alinea en el punto decimal. Este es generalmente el comportamiento que usted desea para una columna de números en la tabla.
+
+format() también puede tomar vectores de caracteres como entrada. En este caso, puede utilizar el argumento justify, específico para la introducción de caracteres, para justificar el texto a la izquierda, a la derecha o al centro.
+
+Vas a armar la siguiente tabla:
+
+| anio                  | valor     |
+|-----------------------|-----------|
+|          Año 0        |       $ 72|
+|          Año 1        |    $ 1,030|
+|          Año 2        |   $ 10,292|
+|Vida útil del proyecto | $1,189,192|
+
+
+Comenzarás por formatear las columnas para prepararlas para ponerlas en una tabla, luego usarás paste() para juntar cada fila. Luego, puede usar writeLines() para mostrar cada fila en una nueva línea.
+
+```{r}
+# Define el nombre del vector
+nombre.entradas <- c("Año 0", "Año 1", "Año 2", "Vida util del proyecto")
+
+# Crea entrada.embellezida
+entrada.embellezida <- format(entrada, digits = 2, big.mark = ",")
+
+# Crea entrada.dolares
+entrada.dolares <- paste("$", entrada.embellezida, sep = "")
+
+# Crea nombres.formateados
+nombres.formateados <- format(nombre.entradas, justify = "right")
+
+# Crea filas
+filas <- paste(nombres.formateados, entrada.dolares, sep = "   ")
+
+# Escribe las filas
+writeLines(filas)
+```
+
+Noveno ejercicio: ¡Pidamos pizza!
+Como ejercicio final en el uso de paste() y para celebrar el llegar al final del primer capítulo, pidamos algo de pizza.
+
+Tenemos una lista de posibles ingredientes para pizza.
+
+Usted va a seleccionar al azar tres ingredientes, y luego ponerlos juntos usando paste() en una orden de pizza, que debe resultar en una cadena como,
+
+"Quiero pedir una pizza con hongos, espinacas y piña".
+
+```{r}
+
+ingredientes <- c("anchovies","artichoke","bacon","breakfast bacon","Canadian bacon","cheese","chicken","chili peppers","feta","garlic","green peppers","grilled onions","ground beef","ham","hot sauce","meatballs","pineapple","sausage","spinach","sun-dried tomato","tomatoes")
+
+# Muestra de aleatoria 3 ingredientes 
+mis_ingredientes <- sample(ingredientes, size = 3)
+
+# Imprimir mis_ingredientes
+print(mis_ingredientes)
+
+# Pegar "y " al ultimo elemento y pasarlo a la variable mis_ingredientes_y
+mis_ingredientes_y <- paste(c("","","y "),mis_ingredientes, sep = "")
+
+# Collapsar con una coma los espacios: estos_ingredientes
+estos_ingredientes <- paste(mis_ingredientes_y, collapse = ", ")
+
+# Agregar el resto de la oracion: mi_orden
+mi_orden <- paste("Quiero pedir una pizza con ", estos_ingredientes, ".", sep = "")
+
+# Ordenar pizza con writeLines()
+writeLines(mi_orden)
+
+```
