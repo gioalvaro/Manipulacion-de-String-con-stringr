@@ -37,4 +37,16 @@ paste(mis_ingredientes_y, collapse = ", ")
 
 # str_c() mis_ingredientes_str con collapse = ", "
 str_c(mis_ingredientes_str, collapse = ", ")
+#Da como resultado NA 
 ```
+
+Segundo Ejercicio: Longitud de la cuerda
+Nuestra siguiente función stringr es str_length(). str_length() toma un vector de cadenas como entrada y devuelve el número de caracteres de cada cadena. Por ejemplo, intenta encontrar el número de personajes en el nombre de Batman:
+
+str_length(c("Bruce", "Wayne"))
+Esto es muy similar a la función base nchar() pero verás que en los ejercicios str_length() maneja los factores de una manera intuitiva, mientras que nchar() simplemente devuelve un error.
+
+Históricamente, nchar() era aún peor, en lugar de devolver un error si se le pasaba un factor, devolvería el número de caracteres en la codificación numérica del factor. Afortunadamente este comportamiento ha sido arreglado, pero fue una de las motivaciones originales detrás de str_length().
+
+Echa tu primer vistazo a los nombres de los bebés preguntando si los nombres de las niñas son más largos que los de los niños.
+
