@@ -26,15 +26,15 @@ mis_ingredientes_y <- paste(c("", "", "y "), mis_ingredientes, sep = "")
 # Imprimir mis_ingredientes_y
 print(mis_ingredientes_y)
 
-# Usar str_c() en vez de paste(): my_toppings_str
-my_toppings_str <- str_c(c("","","and "), mis_ingredientes, sep = "")
+# Usar str_c() en vez de paste(): mis_ingredientes_str
+mis_ingredientes_str <- str_c(c("","","y "), mis_ingredientes, sep = "")
 
-# Print my_toppings_str
-print(my_toppings_str)
+# Imprimir mis_ingredientes_str
+print(mis_ingredientes_str)
 
-# paste() my_toppings_and with collapse = ", "
-paste(my_toppings_and, collapse = ", ")
+# paste() mis_ingredientes_y con collapse = ", "
+paste(mis_ingredientes_y, collapse = ", ")
 
-# str_c() my_toppings_str with collapse = ", "
-str_c(my_toppings_str, collapse = ", ")
+# str_c() mis_ingredientes_str con collapse = ", "
+str_c(mis_ingredientes_str, collapse = ", ")
 ```
