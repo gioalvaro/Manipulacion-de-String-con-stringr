@@ -1,0 +1,40 @@
+---
+title: "Segundo capitulo de stringr"
+author: "Alvaro Luis Fraga"
+date: "August 5, 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## Primer Ejercicio: Juntar las cuerdas con el hilo
+
+Para tu primera función stringr, veremos str_c(), la c es la abreviatura de concatenar, una función que funciona como paste(). Toma vectores de cadenas como entrada junto con argumentos sep y collapse.
+
+Hay dos formas clave en que str_c() difiere de paste(). Primero, el separador por defecto es una cadena vacía, sep = "", a diferencia de un espacio, por lo que es más parecido a paste0(). Este es un ejemplo de una función stringr, realizando una operación similar a una función base, pero usando un valor por defecto que es más probable que sea el que usted desea. Recuerda que en tu pedido de pizza, tenías que poner sep = "" varias veces.
+
+La segunda forma en que str_c() difiere de paste() es en su manejo de valores perdidos. paste() convierte los valores perdidos en la cadena "NA", mientras que str_c() propaga valores perdidos. Esto significa que la combinación de cualquier cadena con un valor que falta resultará en otro valor que falta.
+
+Vamos a explorar esta diferencia utilizando su pedido de pizza del capítulo anterior.
+
+```{r}
+library(stringr)
+
+mis_ingredientes <- c("cheese", NA, NA)
+mis_ingredientes_y <- paste(c("", "", "y "), mis_ingredientes, sep = "")
+
+# Imprimir mis_ingredientes_y
+print(mis_ingredientes_y)
+
+# Usar str_c() en vez de paste(): my_toppings_str
+my_toppings_str <- str_c(c("","","and "), mis_ingredientes, sep = "")
+
+# Print my_toppings_str
+print(my_toppings_str)
+
+# paste() my_toppings_and with collapse = ", "
+paste(my_toppings_and, collapse = ", ")
+
+# str_c() my_toppings_str with collapse = ", "
+str_c(my_toppings_str, collapse = ", ")
+```
